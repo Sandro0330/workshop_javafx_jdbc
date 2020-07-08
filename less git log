@@ -1,0 +1,47 @@
+[33mcommit 520991bdbe95bd933be9364e9c2e0176a054cbbb[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Sandro0330 <60124712+Sandro0330@users.noreply.github.com>
+Date:   Mon Jun 29 18:55:47 2020 -0300
+
+    Controle da lista de Departamento
+
+[33mcommit 9a3852d4734b3248643403c481cc251bc79be715[m
+Author: Sandro0330 <60124712+Sandro0330@users.noreply.github.com>
+Date:   Mon Jun 29 17:33:42 2020 -0300
+
+    Design da Lista de Departamento
+
+[33mcommit 336a09a23b69c789bdd2ca1d13cef4f5664d67af[m
+Author: Sandro0330 <60124712+Sandro0330@users.noreply.github.com>
+Date:   Tue Jun 23 16:33:53 2020 -0300
+
+    Configurando a tela (About)
+
+[33mcommit 94027dbb18b49fb712915a05dcc5bf718a0e12cb[m
+Author: Sandro0330 <60124712+Sandro0330@users.noreply.github.com>
+Date:   Tue Jun 23 15:23:32 2020 -0300
+
+    Controle de tela visual
+
+[33mcommit 460584adfb4aa0d26113aa413497ec6e023af14b[m
+Author: Sandro0330 <60124712+Sandro0330@users.noreply.github.com>
+Date:   Mon Jun 22 20:11:38 2020 -0300
+
+    Desenhando tela principal
+
+[33mcommit 513ea1bbd7bbb2c64d8b42458bef536e62807e3c[m
+Author: Sandro0330 <60124712+Sandro0330@users.noreply.github.com>
+Date:   Mon Jun 22 18:46:02 2020 -0300
+
+    Primeira amostra de uma tela JavaFX
+
+[33mcommit fe2cc7cd55c3bc275a9c722d6807b9c9846a7350[m
+Author: Sandro0330 <60124712+Sandro0330@users.noreply.github.com>
+Date:   Mon Jun 22 17:24:54 2020 -0300
+
+    Criando projeto Local
+
+[33mcommit ae4ff2c51d5401b3cdb18c996c0da59b262cf802[m
+Author: Sandro Aparecido <60124712+Sandro0330@users.noreply.github.com>
+Date:   Mon Jun 22 17:15:24 2020 -0300
+
+    Initial commit
