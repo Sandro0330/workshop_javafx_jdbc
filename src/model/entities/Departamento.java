@@ -3,13 +3,13 @@ package model.entities;
 import java.io.Serializable;
 
 public class Departamento implements Serializable {
-
-	private static final long serialVersionUID = 1L;
 	
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nome;
 	
 	public Departamento() {
+		
 	}
 
 	public Departamento(Integer id, String nome) {
@@ -32,51 +32,35 @@ public class Departamento implements Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
+	// Indica a comparação por conteudos e não por ponteiros
 	@Override
 	public int hashCode() {
-		final int prime = 32;
-		int resultado = 1;
-		resultado = prime * resultado + ((id == null) ? 0 : id.hashCode());
-		return resultado;
-		
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(this == obj) {
+		if (this == obj)
 			return true;
-		}
-		
-		if(obj == null) {
+		if (obj == null)
 			return false;
-		}
-		
-		if(getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-		Departamento outro = (Departamento) obj;
-		if(id == null) {
-			if(outro.id != null)
+		Departamento other = (Departamento) obj;
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if(!id.equals(outro.id)) {
+		} else if (!id.equals(other.id))
 			return false;
-		}
-			
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Departamento [id=" + id + ", nome=" + nome + "]";
+		return "Departamento [id = " + id + ", nome = " + nome + "]";
 	}	
-	
 }
-
-
-
-
-
-
-
-
