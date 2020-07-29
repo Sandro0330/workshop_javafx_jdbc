@@ -1,18 +1,28 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+
 import application.Main;
+import gui.util.Alerts;
+import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Departamento;
 import model.services.ServicoDepartamento;
@@ -36,8 +46,9 @@ public class DepartmentListController implements Initializable {
 	private ObservableList<Departamento> obsList;
 	
 	@FXML
-	public void onBtnNewAction() {
-		System.out.println("onBtnNewAction");
+	public void onBtnNewAction(ActionEvent event) {
+		Stage parentStage = Utils.currentStage(event);
+		createDialogForm("/gui/DepartmentForm.fxml", parentStage);
 	}
 	
 	public void setServicoDepartamento(ServicoDepartamento service) {
@@ -70,4 +81,24 @@ public class DepartmentListController implements Initializable {
 			
 	}
 
+	private void createDialogForm(String nomeAbsoluto, Stage parentStage) {
+		try {
+			FXMLLoader carregando = new FXMLLoader(getClass().getResource(nomeAbsoluto));
+			Pane painel = carregando.load();
+			
+			Stage dialoStage = new Stage();
+			dialoStage.setTitle("Informe os dados do Departamento");
+			dialoStage.setScene(new Scene(painel));
+			dialoStage.setResizable(false);
+			dialoStage.initOwner(parentStage);
+			dialoStage.initModality(Modality.WINDOW_MODAL);
+			dialoStage.showAndWait();
+			
+		}
+		catch (IOException e) {
+			Alerts.showAlert("IO Exception", "Error losding view", e.getMessage(), AlertType.ERROR);
+		}
+	}
+	
+	
 }
