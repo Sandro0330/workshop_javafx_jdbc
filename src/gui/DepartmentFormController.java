@@ -3,17 +3,25 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import db.DbException;
+import gui.util.Alerts;
+import gui.util.Utils;
 import gui.util.constrains;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import model.entities.Departamento;
+import model.services.ServicoDepartamento;
 
 public class DepartmentFormController implements Initializable {
 	
 	private Departamento entidade;
+	
+	private ServicoDepartamento service;
 	
 	@FXML
 	private TextField txtId;
@@ -34,15 +42,39 @@ public class DepartmentFormController implements Initializable {
 	public void setDepartamento(Departamento entidade) {
 		this.entidade = entidade;
 	}
+	
+	public void setServicoDepartamento (ServicoDepartamento service) {
+		this.service = service;
+	}
 
 	@FXML
-	private void onBtnSalvarAction() {
-		System.out.println("onBtnSalvarAction");
+	private void onBtnSalvarAction(ActionEvent evento) {
+		if(entidade == null) {
+			throw new IllegalStateException("A minha entidade estava nula!");
+		}
+		if(service ==null) {
+			throw new IllegalStateException("O serviço estava nulo");
+		}
+		try {
+			
+			entidade = getFormData();
+			service.salvarOuAtualizar(entidade);
+			Utils.currentStage(evento).close(); // fechar a janela após salvar o objeto no Banco
+		} catch (DbException e) {
+			Alerts.showAlert("ERRO ao salvar o objeto ", null, e.getMessage(), AlertType.ERROR);
+		}
 	}
 	
+	private Departamento getFormData() { // reponsavel em pegar os objetos e criar um novo departamento
+		Departamento obj = new Departamento();
+		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		obj.setNome(txtNome.getText());
+		return obj;
+	}
+
 	@FXML
-	private void onBtnCancelarAction() {
-		System.out.println("onBtnCancelarAction");
+	private void onBtnCancelarAction(ActionEvent evento) {
+		Utils.currentStage(evento).close();
 	}
 	
 	

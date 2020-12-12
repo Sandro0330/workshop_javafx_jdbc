@@ -13,4 +13,13 @@ public class ServicoDepartamento {
 	public List<Departamento> findAll() {
 		return dao.findAll();
 	}
+	
+	//Inserir um novo departemento ou atualizar o departamento existente
+	public void salvarOuAtualizar(Departamento obj) {
+		if (obj.getId() == null) {
+			dao.insert(obj);
+		} else {
+			dao.update(obj);
+		}
+	}
 }
