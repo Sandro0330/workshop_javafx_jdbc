@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 import model.entities.Departamento;
 import model.services.ServicoDepartamento;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, DataChangeListener {
 	
 	private ServicoDepartamento service;
 	
@@ -89,6 +90,7 @@ public class DepartmentListController implements Initializable {
 			DepartmentFormController controller = carregando.getController();
 			controller.setDepartamento(obj);
 			controller.setServicoDepartamento(new ServicoDepartamento());
+			controller.subscribeDataChangeListener(this);
 			controller.updateFormData();
 			
 			Stage dialoStage = new Stage();
@@ -104,6 +106,11 @@ public class DepartmentListController implements Initializable {
 			Alerts.showAlert("IO Exception", "Error losding view", e.getMessage(), AlertType.ERROR);
 	
 		}
+	}
+
+	@Override
+	public void onDataChanged() {
+		updateTableView(); 
 	}
 	
 	

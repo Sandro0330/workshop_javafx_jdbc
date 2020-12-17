@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import gui.util.constrains;
@@ -22,6 +25,8 @@ public class DepartmentFormController implements Initializable {
 	private Departamento entidade;
 	
 	private ServicoDepartamento service;
+	
+	private List<DataChangeListener> dataChangeListener = new ArrayList<>();
 	
 	@FXML
 	private TextField txtId;
@@ -46,6 +51,10 @@ public class DepartmentFormController implements Initializable {
 	public void setServicoDepartamento (ServicoDepartamento service) {
 		this.service = service;
 	}
+	
+	public void subscribeDataChangeListener(DataChangeListener listener) {
+		dataChangeListener.add(listener);
+	}
 
 	@FXML
 	private void onBtnSalvarAction(ActionEvent evento) {
@@ -59,12 +68,20 @@ public class DepartmentFormController implements Initializable {
 			
 			entidade = getFormData();
 			service.salvarOuAtualizar(entidade);
+			notifyDataChangeListener();
 			Utils.currentStage(evento).close(); // fechar a janela após salvar o objeto no Banco
 		} catch (DbException e) {
 			Alerts.showAlert("ERRO ao salvar o objeto ", null, e.getMessage(), AlertType.ERROR);
 		}
 	}
 	
+	private void notifyDataChangeListener() {
+		for (DataChangeListener listener : dataChangeListener) {
+			listener.onDataChanged();
+		}
+		
+	}
+
 	private Departamento getFormData() { // reponsavel em pegar os objetos e criar um novo departamento
 		Departamento obj = new Departamento();
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
