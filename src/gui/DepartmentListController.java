@@ -9,6 +9,7 @@ import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -39,6 +41,9 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	
 	@FXML
 	private TableColumn<Departamento, String> colunaTabelaNome;
+	
+	@FXML
+	private TableColumn<Departamento, Departamento>tableColumnEDIT;
 	
 	@FXML
 	private Button btnNovo;
@@ -79,6 +84,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		List<Departamento> lista = service.findAll();  
 		obsList = FXCollections.observableArrayList(lista);
 		tbVisualDepartamento.setItems(obsList);
+		initEditiButtons();
 			
 	}
 
@@ -113,5 +119,25 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		updateTableView(); 
 	}
 	
+	private void initEditiButtons() {
+		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Departamento, Departamento>(){
+			private final Button button = new Button("edit");
+			
+			@Override
+			protected void updateItem(Departamento obj, boolean empty) {
+				super.updateItem(obj, empty);
+				
+				if(obj == null) {
+					setGraphic(null);
+					return;
+				}
+				
+				setGraphic(button);
+				button.setOnAction(event -> createDialogForm(obj, "/gui/DepartmentForm.fxml", Utils.currentStage(event)));
+			}
+		
+		});
+	}
 	
 }
