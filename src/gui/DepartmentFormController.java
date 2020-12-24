@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listeners.DataChangeListener;
@@ -13,11 +15,12 @@ import gui.util.constrains;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import model.entities.Departamento;
+import model.exceptions.ValidationException;
 import model.services.ServicoDepartamento;
 
 public class DepartmentFormController implements Initializable {
@@ -70,7 +73,11 @@ public class DepartmentFormController implements Initializable {
 			service.salvarOuAtualizar(entidade);
 			notifyDataChangeListener();
 			Utils.currentStage(evento).close(); // fechar a janela após salvar o objeto no Banco
-		} catch (DbException e) {
+		} 
+		catch (ValidationException e) {
+			setErrorMessages(e.getErrors());
+		}
+		catch (DbException e) {
 			Alerts.showAlert("ERRO ao salvar o objeto ", null, e.getMessage(), AlertType.ERROR);
 		}
 	}
@@ -84,8 +91,20 @@ public class DepartmentFormController implements Initializable {
 
 	private Departamento getFormData() { // reponsavel em pegar os objetos e criar um novo departamento
 		Departamento obj = new Departamento();
+		
+		ValidationException exception = new ValidationException("Erro de validação");
+		
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		
+		if(txtNome.getText() == null || txtNome.getText().trim().equals(" ")) {
+			exception.addError("nome", "O campo não pode ser vazio");
+		}		
 		obj.setNome(txtNome.getText());
+		
+		if(exception.getErrors().size() > 0) {
+			throw exception;
+		}
+		  
 		return obj;
 	}
 
@@ -114,6 +133,14 @@ public class DepartmentFormController implements Initializable {
 		}
 		txtId.setText(String.valueOf(entidade.getId()));
 		txtNome.setText(entidade.getNome());		
+	}
+	
+	private void setErrorMessages(Map<String, String> errors) {
+		Set<String> fields = errors.keySet();
+		
+		if(fields.contains("nome")) {
+			labelErrorNome.setText(errors.get("nome")); //setando no label a mensagem correspondente ao campo nome
+		}
 	}
 }
 
