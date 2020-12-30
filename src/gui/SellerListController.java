@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -41,6 +42,16 @@ public class SellerListController implements Initializable, DataChangeListener {
 	private TableColumn<Vendedor, String> colunaTabelaNome;
 	
 	@FXML
+	private TableColumn<Vendedor, String> colunaTabelaEmail;
+	
+	@FXML
+	private TableColumn<Vendedor, Date> colunaTabelaDataNasc;
+	
+	@FXML
+	private TableColumn<Vendedor, Double> colunaTabelaSalario;
+	
+	
+	@FXML
 	private TableColumn<Vendedor, Vendedor>tableColumnEDIT;
 	
 	@FXML
@@ -72,6 +83,11 @@ public class SellerListController implements Initializable, DataChangeListener {
 	private void inicializandoNodes() {
 		colunaTabelaId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		colunaTabelaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+		colunaTabelaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		colunaTabelaDataNasc.setCellValueFactory(new PropertyValueFactory<>("dataNasc"));
+		Utils.formatTableColumnDate(colunaTabelaDataNasc, "dd/MM/yyyy");
+		colunaTabelaSalario.setCellValueFactory(new PropertyValueFactory<>("salarioBase"));
+		Utils.formatoTabelaDouble(colunaTabelaSalario, 2);
 		
 		//definindo coulunas e tabelas do tamanho da janela
 		Stage stage = (Stage) Main.getCenaPrincipal().getWindow();
@@ -169,7 +185,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 	
 		if(resultado.get() == ButtonType.OK) {
 			if(service == null) {
-				throw new IllegalStateException("SErviço esta nulo ");
+				throw new IllegalStateException("Serviço esta nulo ");
 			}
 			try {
 				
