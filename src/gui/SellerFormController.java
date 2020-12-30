@@ -19,15 +19,15 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import model.entities.Departamento;
+import model.entities.Vendedor;
 import model.exceptions.ValidationException;
-import model.services.ServicoDepartamento;
+import model.services.ServicoVendedor;
 
-public class DepartmentFormController implements Initializable {
+public class SellerFormController implements Initializable {
 	
-	private Departamento entidade;
+	private Vendedor entidade;
 	
-	private ServicoDepartamento service;
+	private ServicoVendedor service;
 	
 	private List<DataChangeListener> dataChangeListener = new ArrayList<>();
 	
@@ -47,11 +47,11 @@ public class DepartmentFormController implements Initializable {
 	private Button btnCancelar;
 	
 
-	public void setDepartamento(Departamento entidade) {
+	public void setVendedor(Vendedor entidade) {
 		this.entidade = entidade;
 	}
 	
-	public void setServicoDepartamento (ServicoDepartamento service) {
+	public void setServicoVendedor (ServicoVendedor service) {
 		this.service = service;
 	}
 	
@@ -89,8 +89,8 @@ public class DepartmentFormController implements Initializable {
 		
 	}
 
-	private Departamento getFormData() { // reponsavel em pegar os objetos e criar um novo departamento
-		Departamento obj = new Departamento();
+	private Vendedor getFormData() { // reponsavel em pegar os objetos e criar um novo departamento
+		Vendedor obj = new Vendedor();
 		
 		ValidationException exception = new ValidationException("Erro de validação");
 		
@@ -142,7 +142,6 @@ public class DepartmentFormController implements Initializable {
 			labelErrorNome.setText(errors.get("nome")); //setando no label a mensagem correspondente ao campo nome
 		}
 	}
-
 }
 
 

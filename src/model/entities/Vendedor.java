@@ -69,7 +69,7 @@ public class Vendedor implements Serializable {
 	}
 
 	public Departamento getDepartamento() {
-		return departamento;
+		return departamento;  
 	}
 
 	public void setDepartamento(Departamento departamento) {
