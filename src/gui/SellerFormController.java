@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -12,15 +15,24 @@ import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import gui.util.constrains;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
+import model.entities.Departamento;
 import model.entities.Vendedor;
 import model.exceptions.ValidationException;
+import model.services.ServicoDepartamento;
 import model.services.ServicoVendedor;
 
 public class SellerFormController implements Initializable {
@@ -28,6 +40,8 @@ public class SellerFormController implements Initializable {
 	private Vendedor entidade;
 	
 	private ServicoVendedor service;
+	
+	private ServicoDepartamento servicoDepartamento;
 	
 	private List<DataChangeListener> dataChangeListener = new ArrayList<>();
 	
@@ -38,7 +52,28 @@ public class SellerFormController implements Initializable {
 	private TextField txtNome;
 	
 	@FXML
+	private TextField txtEmail;
+	
+	@FXML
+	private DatePicker dpDataNasc;
+	
+	@FXML
+	private TextField txtSalario;
+	
+	@FXML
+	private ComboBox<Departamento> comboBoxDepartamento;
+	
+	@FXML
 	private Label labelErrorNome;
+	
+	@FXML
+	private Label labelErrorEmail;
+	
+	@FXML
+	private Label labelErrorDataNasc;
+	
+	@FXML
+	private Label labelErrorSalario;
 	
 	@FXML
 	private Button btnSalvar;
@@ -47,12 +82,17 @@ public class SellerFormController implements Initializable {
 	private Button btnCancelar;
 	
 
+	private ObservableList<Departamento> obsList;
+	
+
 	public void setVendedor(Vendedor entidade) {
 		this.entidade = entidade;
 	}
 	
-	public void setServicoVendedor (ServicoVendedor service) {
+	public void setServicos (ServicoVendedor service, ServicoDepartamento servicoDepartamento) {
 		this.service = service;
+		this.servicoDepartamento = servicoDepartamento;
+		
 	}
 	
 	public void subscribeDataChangeListener(DataChangeListener listener) {
@@ -122,17 +162,43 @@ public class SellerFormController implements Initializable {
 	
 	private void initializeNodes() {
 		constrains.setTextFieldInteger(txtId);
-		constrains.setTextFieldMaxLength(txtNome, 30);
+		constrains.setTextFieldMaxLength(txtNome, 70);
+		constrains.setTextFieldDouble(txtSalario); //definindo salário como Double
+		constrains.setTextFieldMaxLength(txtEmail, 50);
+		Utils.formatDatePicker(dpDataNasc, "dd/MM/yyyy");
+		
+		inicializandoComboBoxDerpartamento();
 	}
 	
 	//obtendo os dados do departamento entidade e populando as caixa de texto dos formulario
 	
 	public void updateFormData() {
 		if (entidade == null) {
-			throw new IllegalStateException("Entidade é nula ");
+			throw new IllegalStateException("Entidade é nula!");
 		}
 		txtId.setText(String.valueOf(entidade.getId()));
-		txtNome.setText(entidade.getNome());		
+		txtNome.setText(entidade.getNome());
+		txtEmail.setText(entidade.getEmail());
+		Locale.setDefault(Locale.US);
+		txtSalario.setText(String.format("%.2f", entidade.getSalarioBase()));
+		if(entidade.getDataNasc() != null) {
+			
+			dpDataNasc.setValue(LocalDate.ofInstant(entidade.getDataNasc().toInstant(), ZoneId.systemDefault())); //data e hora local
+		}
+		if(entidade.getDepartamento() == null) {
+			comboBoxDepartamento.getSelectionModel().selectFirst();
+		} else {			
+			comboBoxDepartamento.setValue(entidade.getDepartamento());
+		}
+	}
+	
+	public void carregarObjetosAssociados() {
+		if(servicoDepartamento == null) {
+			throw new IllegalStateException("Serviço Departamento estava nulo!");
+		}
+		List<Departamento> list = servicoDepartamento.findAll(); //buscando todos os departamentos do banco
+		obsList = FXCollections.observableArrayList(list);//enviando departamentos para detro das listas
+		comboBoxDepartamento.setItems(obsList);
 	}
 	
 	private void setErrorMessages(Map<String, String> errors) {
@@ -141,6 +207,20 @@ public class SellerFormController implements Initializable {
 		if(fields.contains("nome")) {
 			labelErrorNome.setText(errors.get("nome")); //setando no label a mensagem correspondente ao campo nome
 		}
+	}
+	
+	private void inicializandoComboBoxDerpartamento() {
+		Callback<ListView<Departamento>, ListCell<Departamento>> factory = lv -> new ListCell<Departamento>() {
+			
+			@Override
+			protected void updateItem(Departamento item, boolean empty) {
+				super.updateItem(item, empty);
+				setText(empty ? "" : item.getNome());
+			}
+		};
+		
+		comboBoxDepartamento.setCellFactory(factory);
+		comboBoxDepartamento.setButtonCell(factory.call(null));	
 	}
 }
 
